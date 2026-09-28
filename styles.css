@@ -1,0 +1,549 @@
+    /* ---------------------------------------------------------------
+       :root { ... } defines "variables" — reusable values you can
+       change ONCE here, and the change applies everywhere on the site
+       that uses that variable. This is the #1 place to look if you
+       want to re-theme colors, spacing, or fonts without hunting
+       through the whole file.
+       --------------------------------------------------------------- */
+    :root{
+      /* --- FONT SIZES ---
+         "clamp(min, preferred, max)" means: use the middle value, but
+         never shrink below the first number or grow above the last
+         number. This is what makes text resize smoothly on different
+         screen sizes (phone vs. laptop) instead of jumping abruptly.
+         You usually won't need to touch these. */
+      --text-xs:clamp(.75rem,.7rem + .25vw,.875rem);
+      --text-sm:clamp(.875rem,.8rem + .35vw,1rem);
+      --text-base:clamp(1rem,.95rem + .25vw,1.125rem);
+      --text-lg:clamp(1.125rem,1rem + .75vw,1.5rem);
+      --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+      --text-2xl:clamp(2.25rem,1.5rem + 3vw,4.75rem);
+      --text-3xl:clamp(3.5rem,1.2rem + 7vw,8rem);
+
+      /* --- SPACING SCALE ---
+         These control margins/padding (empty space) throughout the
+         page. Bigger number = more space. 1rem is roughly 16 pixels. */
+      --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;--space-20:5rem;--space-24:6rem;
+
+      /* --- COLOR PALETTE ---
+         THIS IS THE EASIEST PLACE TO CHANGE THE SITE'S LOOK.
+         Every color used anywhere on the page is one of these named
+         variables. Change the hex code (the #xxxxxx value) here and
+         it updates everywhere that color is used.
+         Current theme = dark navy blue background with orange accents. */
+      --color-bg:#001635;              /* main page background color (dark navy) */
+      --color-surface:#08224a;         /* background for cards/panels */
+      --color-surface-2:#0c2d5f;       /* slightly lighter panel background */
+      --color-surface-offset:#12386f;  /* hover/alternate panel background */
+      --color-border:#25548b;          /* thin outline color around boxes */
+      --color-divider:#1b4575;         /* thin line color between list items */
+      --color-text:#fcf0d6;            /* main text color (cream/off-white) */
+      --color-text-muted:#c2d5ea;      /* softer/secondary text color (light blue-gray) */
+      --color-text-faint:#89a8c8;      /* faintest text color, used in placeholders */
+      --color-text-inverse:#001635;    /* dark text used on light backgrounds */
+      --color-primary:#fd652f;         /* SHPE ORANGE — the main accent color used on
+                                            buttons, headline highlights, icons, etc. */
+      --color-primary-highlight:#4b2416; /* dark orange-brown background behind "kicker" labels */
+      --color-blue:#72a9be;            /* secondary accent blue */
+      --color-blue-2:#fcf0d6;          /* a second "blue" variable that is actually cream-colored */
+
+      /* --- SHADOWS / ROUNDED CORNERS ---
+         Controls how "soft" drop shadows look and how rounded the
+         corners of boxes/buttons are. */
+      --shadow-sm:0 1px 2px rgba(0,0,0,.25);
+      --shadow-md:0 20px 52px rgba(0,0,0,.34);
+      --radius-sm:.35rem;--radius-md:.65rem;--radius-lg:1rem;--radius-xl:1.5rem;--radius-full:9999px;
+
+      /* --- PAGE WIDTH ---
+         The page content never gets wider than this, even on huge
+         monitors, so text/lines don't stretch too far. */
+      --content-wide:1180px;
+
+      /* --- FONTS ---
+         'Inter' = normal paragraph/body text.
+         'Anton' = the bold, condensed, all-caps headline font (used for
+         big titles like "MEET THE CHAPTER LEADERSHIP"). */
+      --font-body:'Inter',sans-serif;
+      --font-display:'Anton',sans-serif;
+
+      /* How long hover/click animations take (in milliseconds). */
+      --transition:180ms cubic-bezier(.16,1,.3,1);
+    }
+
+    /* ---------------------------------------------------------------
+       GLOBAL RESET — these rules just remove default browser spacing
+       and set some sensible defaults (e.g. images never overflow their
+       box, links don't have underlines by default, buttons look like
+       plain text until styled). You generally don't need to edit this.
+       --------------------------------------------------------------- */
+    *,*:before,*:after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-size-adjust:none}
+    body{min-height:100vh;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body);font-size:var(--text-base);line-height:1.6}
+    img,svg,iframe{display:block;max-width:100%;height:auto}
+    a{text-decoration:none;color:inherit;transition:all var(--transition)}
+    button{font:inherit;border:0;background:none;color:inherit;cursor:pointer;transition:all var(--transition)}
+    :focus-visible{outline:2px solid var(--color-primary);outline-offset:3px} /* keyboard-focus outline, for accessibility */
+
+    /* .container = the reusable "centered column with side margins"
+       wrapper used all over the page to keep content from touching
+       the edges of the screen. */
+    .container{width:min(calc(100% - 2rem),var(--content-wide));margin-inline:auto}
+
+    /* .section = generic vertical spacing (top/bottom padding) added
+       around most page sections. */
+    .section{padding:clamp(var(--space-12),8vw,var(--space-24)) 0}
+
+    /* .kicker = the small pill-shaped orange label above headlines,
+       e.g. "ABOUT THE CHAPTER" or "CALENDAR". */
+    .kicker{display:inline-flex;align-items:center;gap:var(--space-2);padding:.45rem .8rem;border:1px solid color-mix(in srgb,var(--color-primary) 40%, var(--color-border));background:var(--color-primary-highlight);color:var(--color-blue-2);font-size:var(--text-xs);font-weight:800;letter-spacing:.12em;text-transform:uppercase;border-radius:var(--radius-full)}
+
+    .subhead{font-size:var(--text-lg);max-width:34ch;color:var(--color-text-muted)}
+
+    /* ---------------------------------------------------------------
+       HEADER / NAVIGATION BAR (the sticky bar at the very top with the
+       SHPE UTA logo and the About / Officers / Updates / Join links)
+       --------------------------------------------------------------- */
+    .site-header{position:sticky;top:0;z-index:20;border-bottom:1px solid #dbe3ec;background:rgba(255,255,255,.96);color:var(--color-text-inverse);backdrop-filter:blur(12px)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;gap:var(--space-4);padding:var(--space-4) 0}
+    .brand{display:flex;align-items:center;gap:var(--space-3);min-height:44px} /* logo + chapter name group */
+    /* .brand-mark = the official SHPE logo image (now a transparent PNG,
+       so no white background shows behind it). It's a wide logo (not a
+       square icon), so we size it by HEIGHT and let the width scale
+       automatically to match — no badge/background needed anymore. */
+    .brand-mark{height:2.5rem;width:auto}
+    .brand-copy strong{display:block;font-size:var(--text-sm);font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .brand-copy span{display:block;font-size:var(--text-xs);color:var(--color-text-muted)}
+
+    /* .brand-mark-combo = the wide "SHPE + The University of Texas at
+       Arlington" combined logo used in the header banner. It's a much
+       wider image than the plain SHPE icon (.brand-mark), so it gets its
+       own height (this is the ONE number to change if you want the
+       banner logo bigger or smaller — the width follows automatically).
+       The logo's own navy-colored text is hard to read directly on the
+       dark page background, so a soft, semi-transparent light "backing"
+       card sits behind it (background + border-radius + padding + a
+       faint shadow for a little lift). It's intentionally not pure solid
+       white — the slight transparency (the ".96" below) keeps it gentle
+       instead of a harsh white box. To remove the backing entirely,
+       delete the background/border-radius/padding/box-shadow lines and
+       keep just the height/width/box-sizing lines. */
+    .brand-mark-combo{height:2.75rem;width:auto;box-sizing:content-box;background:rgba(255,255,255,.96);border-radius:.65rem;padding:.45rem 1rem;box-shadow:0 2px 10px rgba(0,0,0,.18)}
+    .nav{display:flex;align-items:center;gap:var(--space-4)}
+    .nav-links{display:flex;gap:var(--space-4);font-size:var(--text-sm);font-weight:600;color:#315374} /* the nav menu links */
+    .nav-links a:hover{color:var(--color-text-inverse)}
+
+    /* Button styling shared by the "National membership" / "Contact the
+       chapter" buttons near the bottom of the page (in the orange Join
+       box). .hero-actions is just the row/wrapper around those buttons
+       (the name is left over from an earlier layout, but it's still in
+       active use, so it stays). */
+    .hero-actions{display:flex;flex-wrap:wrap;gap:var(--space-3)} /* row of buttons, wraps on small screens */
+    .btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:1rem 1.35rem;border-radius:var(--radius-full);font-size:var(--text-sm);font-weight:800;letter-spacing:.02em}
+    .btn-secondary{border:1px solid color-mix(in srgb,var(--color-blue) 20%, var(--color-border));background:var(--color-surface);color:var(--color-blue-2)}
+    .btn-secondary:hover{background:var(--color-surface-offset)}
+
+    /* .panel-note = small helper/explainer text used under a few section
+       intros (e.g. the officer section and the photo slideshow intro). */
+    .panel-note{font-size:var(--text-sm);color:#4f5f84} /* small helper/explainer text (light gray-blue) */
+
+    /* .split = a 2-column layout (label+heading on the left, paragraph
+       on the right) used in the "About the chapter" section. */
+    .split{display:grid;gap:var(--space-8);align-items:start}
+    .block-title{font-family:var(--font-display);font-size:var(--text-2xl);line-height:.95;text-transform:uppercase;letter-spacing:.03em;max-width:11ch}
+
+    /* .metric-grid / .metric = the 3 stat boxes in the "Convention
+       pathway" section (20,000+ members / Indianapolis / STEM for the Bold). */
+    .metric-grid{display:grid;gap:var(--space-4)}
+    .metric{padding:var(--space-5);border-left:4px solid var(--color-primary);background:var(--color-surface-2);border-radius:0 var(--radius-lg) var(--radius-lg) 0}
+    .metric strong{display:block;font-family:var(--font-display);font-size:var(--text-xl);line-height:1;text-transform:uppercase}
+    .metric span{display:block;color:var(--color-text-muted);margin-top:var(--space-2)}
+
+    /* National convention feature: a UTA-styled interpretation of the
+       bold event-poster and countdown layout used on chapter sites. */
+    .convention-section{background:linear-gradient(180deg,transparent,rgba(8,34,74,.5),transparent)}
+    .convention-feature{display:grid;gap:clamp(var(--space-8),6vw,var(--space-16));align-items:center}
+    .convention-poster{position:relative;overflow:hidden;min-height:34rem;padding:var(--space-6);display:flex;flex-direction:column;justify-content:center;background:var(--color-primary);color:#fff;border:3px solid var(--color-blue);border-radius:var(--radius-xl);box-shadow:14px 14px 0 var(--color-blue),var(--shadow-md);transform:rotate(-1deg)}
+    .convention-poster::before{content:"";position:absolute;width:17rem;height:17rem;right:-6rem;bottom:-7rem;border:2.5rem solid rgba(0,22,53,.28);border-radius:50%}
+    .poster-year{position:relative;font-family:var(--font-display);font-size:clamp(4rem,9vw,7rem);line-height:.82;letter-spacing:.01em;text-transform:uppercase;color:var(--color-bg)}
+    .poster-year span{color:#fff}
+    .poster-body{position:relative;display:grid;grid-template-columns:auto 1fr;align-items:center;gap:var(--space-4);margin:var(--space-6) 0;background:var(--color-bg);padding:var(--space-4);border-radius:var(--radius-md)}
+    .poster-theme{font-size:var(--text-xs);font-weight:800;line-height:1.05;letter-spacing:.08em;color:var(--color-blue);text-transform:uppercase}
+    .poster-theme strong{font-size:1.55rem;color:var(--color-primary)}
+    .poster-title{font-family:var(--font-display);font-size:clamp(2.4rem,6vw,4.6rem);line-height:.82;text-transform:uppercase}
+    .poster-location,.poster-date{position:relative;width:max-content;text-transform:uppercase;font-weight:800;letter-spacing:.12em}
+    .poster-location{color:var(--color-bg);font-size:var(--text-lg)}
+    .poster-date{margin-top:var(--space-2);padding:.35rem .65rem;background:var(--color-blue);color:var(--color-bg);border-radius:var(--radius-sm)}
+    .convention-heading{font-family:var(--font-display);font-size:clamp(2.8rem,6vw,5.6rem);line-height:.9;letter-spacing:.02em;text-transform:uppercase;margin:var(--space-4) 0}
+    .convention-copy{max-width:58ch;color:var(--color-text-muted)}
+    .countdown{display:grid;grid-template-columns:repeat(2,1fr);margin:var(--space-8) 0 var(--space-6);border-top:1px solid var(--color-border);border-bottom:1px solid var(--color-border)}
+    .countdown-unit{padding:var(--space-4);text-align:center;border-right:1px solid var(--color-border)}
+    .countdown-unit:nth-child(2){border-right:0}
+    .countdown-unit:nth-child(-n+2){border-bottom:1px solid var(--color-border)}
+    .countdown-unit:last-child{border-right:0}
+    .countdown-unit strong{display:block;font-family:var(--font-display);font-size:clamp(2.8rem,6vw,4.7rem);line-height:1;color:var(--color-primary);font-variant-numeric:tabular-nums}
+    .countdown-unit span{display:block;margin-top:var(--space-2);font-size:var(--text-xs);font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--color-text-muted)}
+    .convention-link{background:var(--color-primary);color:#111}
+    .convention-link:hover{background:#ff8755;transform:translateY(-2px)}
+
+    /* Dedicated Join page */
+    .text-brand{font-family:var(--font-display);font-size:1.9rem;line-height:1;color:var(--color-primary);letter-spacing:.04em;text-transform:uppercase}
+    .join-page{min-height:calc(100vh - 10rem);display:grid;align-items:center}
+    .join-hero{position:relative;overflow:hidden;display:grid;gap:var(--space-8);padding:clamp(var(--space-8),7vw,var(--space-16));background:linear-gradient(135deg,var(--color-primary),#ff8755 58%,#ffc4a8);color:#111;border-radius:var(--radius-xl);box-shadow:var(--shadow-md)}
+    .join-hero::after{content:"";position:absolute;width:24rem;height:24rem;right:-9rem;bottom:-12rem;border:4rem solid rgba(255,255,255,.18);border-radius:50%}
+    .join-copy,.join-actions{position:relative;z-index:1}
+    .join-title{font-family:var(--font-display);font-size:clamp(2.75rem,6vw,5.25rem);line-height:.92;text-transform:uppercase;letter-spacing:.02em;max-width:12ch;margin:var(--space-4) 0}
+    .join-intro{max-width:58ch;font-size:var(--text-base);color:rgba(17,17,17,.78)}
+    .join-actions{display:grid;gap:var(--space-4)}
+    .join-option{display:block;padding:var(--space-5);background:rgba(255,255,255,.86);color:#111;border:1px solid rgba(17,17,17,.1);border-radius:var(--radius-lg);box-shadow:var(--shadow-sm)}
+    .join-option:hover{background:#fff;transform:translateY(-3px)}
+    .join-option-primary{background:var(--color-bg);color:#fff;border-color:var(--color-bg)}
+    .join-option-primary:hover{background:var(--color-surface);color:#fff}
+    .join-option-primary span{color:var(--color-text-muted)}
+    .join-option strong{display:block;font-size:var(--text-lg);margin-bottom:var(--space-1)}
+    .join-option span{display:block;color:rgba(17,17,17,.7);font-size:var(--text-sm)}
+    .join-back{display:inline-flex;margin-top:var(--space-5);font-weight:800;color:#111}
+
+    /* ---------------------------------------------------------------
+       OFFICER CARDS (the "Meet the chapter leadership" grid of boxes,
+       each with a "Future photo" placeholder + title + description)
+       --------------------------------------------------------------- */
+    .officer-section{margin-top:var(--space-10);display:grid;gap:var(--space-6)}
+    .officer-grid{display:grid;gap:var(--space-4)} /* how many columns is set further down in @media rules */
+    .officer-card{padding:var(--space-5);border-radius:var(--radius-xl);background:var(--color-surface);border:1px solid color-mix(in srgb,var(--color-border) 80%, transparent);box-shadow:var(--shadow-sm)}
+    /* .officer-photo = the dashed placeholder box that currently says
+       "Future photo / President" etc. When you have real headshots,
+       you'll replace this <div> with an <img> tag (see the HTML below
+       and the companion guide for exact instructions). */
+    .officer-photo{aspect-ratio:4/5;border-radius:calc(var(--radius-xl) - .35rem);display:grid;place-items:center;background:linear-gradient(180deg,color-mix(in srgb,var(--color-surface-offset) 75%, transparent),color-mix(in srgb,var(--color-surface-2) 92%, transparent));border:1px dashed color-mix(in srgb,var(--color-blue) 40%, var(--color-border));margin-bottom:var(--space-4);color:var(--color-text-faint);font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;text-align:center;padding:var(--space-4)}
+    .officer-card h3{font-family:var(--font-display);font-size:var(--text-lg);letter-spacing:.03em;text-transform:uppercase;line-height:1.02;margin-bottom:var(--space-2)}
+    .officer-card p{color:var(--color-text-muted);font-size:var(--text-sm)}
+    .officer-group-title{font-family:var(--font-display);font-size:var(--text-xl);letter-spacing:.03em;text-transform:uppercase} /* e.g. "Executive board" / "Directors and chairs" labels */
+
+    /* ---------------------------------------------------------------
+       "UPDATES" SECTION — the two side-by-side boxes: chapter updates
+       text on the left, and the Google Calendar embed on the right.
+       --------------------------------------------------------------- */
+    .updates-grid{display:grid;grid-template-columns:1fr;gap:var(--space-4)}
+    .updates-card,.calendar-card{padding:var(--space-6);border-radius:var(--radius-xl);background:var(--color-surface);border:1px solid color-mix(in srgb,var(--color-border) 80%, transparent);box-shadow:var(--shadow-sm)}
+    .section-title{font-family:var(--font-display);font-size:var(--text-xl);line-height:.98;text-transform:uppercase;letter-spacing:.03em;margin:var(--space-3) 0 var(--space-4)}
+    .update-item{padding:var(--space-4) 0;border-bottom:1px solid var(--color-divider)} /* one row of the updates list, with a divider line below it */
+    .update-item:last-child{border-bottom:0;padding-bottom:0}
+    .update-item strong{display:block;font-size:var(--text-sm);letter-spacing:.06em;text-transform:uppercase;color:var(--color-primary);margin-bottom:var(--space-2)}
+    .update-item p{color:var(--color-text-muted);max-width:60ch}
+    /* .calendar-shell forces the embedded Google Calendar iframe to
+       keep a fixed aspect ratio (82% of its width tall) so it doesn't
+       look squished on any screen size. */
+    .calendar-shell{position:relative;padding-bottom:82%;height:0;overflow:hidden;border-radius:var(--radius-lg);border:1px solid color-mix(in srgb,var(--color-border) 70%, transparent);background:var(--color-surface-2)}
+    .calendar-shell iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:0}
+    .calendar-note{margin-top:var(--space-4);font-size:var(--text-sm);color:var(--color-text-muted)}
+
+    /* ---------------------------------------------------------------
+       PHOTO SLIDESHOW ("Chapter gallery" section). This is the
+       styling for the rotating photo carousel with left/right arrows
+       and the small dots underneath. The actual click/rotation
+       behavior lives in the <script> at the bottom of the page.
+       --------------------------------------------------------------- */
+    .slideshow-card{display:grid;gap:var(--space-5)}
+    .slideshow{display:grid;grid-template-columns:auto 1fr auto;gap:var(--space-4);align-items:center} /* [left arrow] [slides] [right arrow] */
+    .slides{position:relative;min-height:28rem}
+    .slide{display:none;grid-template-columns:1.2fr .8fr;gap:var(--space-4);align-items:stretch} /* every slide is hidden by default */
+    .slide.is-active{display:grid} /* ...except the one JS marks as "active" (currently visible) */
+    /* .slide-image = the dashed "Drop photo here" placeholder box.
+       Just like the officer photos, you'll swap this for a real <img>
+       once you have event photos ready. */
+    .slide-image{min-height:28rem;border-radius:var(--radius-xl);border:1px dashed color-mix(in srgb,var(--color-blue) 45%, var(--color-border));background:linear-gradient(135deg,color-mix(in srgb,var(--color-surface-offset) 82%, transparent),color-mix(in srgb,var(--color-surface-2) 92%, transparent));display:grid;place-items:center;color:var(--color-text-faint);font-size:var(--text-sm);letter-spacing:.14em;text-transform:uppercase;padding:var(--space-6);text-align:center}
+    .slide-caption{display:grid;align-content:end;gap:var(--space-3);padding:var(--space-5);border-radius:var(--radius-xl);background:color-mix(in srgb,#fff 4%, transparent);border:1px solid color-mix(in srgb,var(--color-border) 70%, transparent)}
+    .slide-caption strong{font-family:var(--font-display);font-size:var(--text-xl);line-height:1;text-transform:uppercase;letter-spacing:.03em;color:var(--color-primary)} /* e.g. "Slide 1" label */
+    .slide-caption span{color:var(--color-text-muted)} /* the caption sentence under the slide number */
+    .slide-arrow{width:44px;height:44px;border-radius:50%;background:var(--color-surface-2);border:1px solid color-mix(in srgb,var(--color-border) 75%, transparent);color:var(--color-text);font-size:1.35rem;display:grid;place-items:center}
+    .slide-arrow:hover{background:var(--color-surface-offset)}
+    .slide-dots{display:flex;justify-content:center;gap:var(--space-3)}
+    .dot{width:12px;height:12px;border-radius:50%;background:color-mix(in srgb,var(--color-text-faint) 55%, transparent);border:0} /* an inactive dot */
+    .dot.is-active{background:var(--color-primary)} /* the dot for whichever slide is currently showing */
+
+    /* ---------------------------------------------------------------
+       "JOIN THE CHAPTER" call-to-action box near the bottom of the
+       page (the orange gradient box with the two buttons).
+       --------------------------------------------------------------- */
+    .cta{position:relative;overflow:hidden;padding:var(--space-8);border-radius:var(--radius-xl);background:linear-gradient(135deg,var(--color-primary),#ff8755 55%,#ffc4a8);color:#111;box-shadow:var(--shadow-md)}
+    .cta::after{content:"";position:absolute;inset:auto -4rem -4rem auto;width:14rem;height:14rem;border-radius:50%;background:rgba(255,255,255,.18)} /* decorative faint circle in the corner */
+    .cta h2{position:relative;font-family:var(--font-display);font-size:var(--text-2xl);line-height:.95;text-transform:uppercase;letter-spacing:.03em;max-width:12ch}
+    .cta p{position:relative;max-width:48ch;margin:var(--space-4) 0 var(--space-6);color:rgba(17,17,17,.8)}
+
+    /* ---------------------------------------------------------------
+       FOOTER (bottom of the page: mini logo, one-line note, and the
+       Instagram / SHPE Membership links on the right)
+       --------------------------------------------------------------- */
+    footer{padding:var(--space-10) 0 var(--space-12);border-top:1px solid #dbe3ec;background:#fff;color:var(--color-text-inverse)}
+    .footer-grid{display:grid;gap:var(--space-4)}
+    .footer-note{font-size:var(--text-sm);color:#315374}
+
+
+
+    /* ---------------------------------------------------------------
+       MENTORSHPE SECTION
+       Styled to match the website's existing navy surfaces, orange
+       accents, rounded cards, Anton headings, and responsive spacing.
+       --------------------------------------------------------------- */
+    .mentorshpe-card{
+      position:relative;
+      overflow:hidden;
+      padding:clamp(var(--space-6),5vw,var(--space-10));
+      border-radius:var(--radius-xl);
+      background:
+        radial-gradient(circle at top right,color-mix(in srgb,var(--color-primary) 16%,transparent),transparent 34%),
+        var(--color-surface);
+      border:1px solid color-mix(in srgb,var(--color-border) 80%,transparent);
+      box-shadow:var(--shadow-sm);
+    }
+    .mentorshpe-hero{display:grid;gap:var(--space-8);align-items:center;margin-bottom:var(--space-10)}
+    .mentorshpe-intro{max-width:72ch}
+    .mentorshpe-intro p{color:var(--color-text-muted);margin-bottom:var(--space-6)}
+    .mentorshpe-photo{
+      min-height:22rem;
+      display:grid;
+      place-items:end start;
+      overflow:hidden;
+      padding:var(--space-6);
+      border-radius:var(--radius-xl);
+      border:1px dashed color-mix(in srgb,var(--color-blue) 45%,var(--color-border));
+      background:
+        linear-gradient(180deg,transparent 35%,rgba(0,22,53,.92)),
+        radial-gradient(circle at 70% 25%,color-mix(in srgb,var(--color-primary) 38%,transparent),transparent 28%),
+        linear-gradient(135deg,var(--color-surface-offset),var(--color-surface-2));
+    }
+    .mentorshpe-photo-copy strong{
+      display:block;
+      font-family:var(--font-display);
+      font-size:var(--text-xl);
+      line-height:1;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      margin-bottom:var(--space-2);
+    }
+    .mentorshpe-photo-copy span{display:block;max-width:38ch;color:var(--color-text-muted);font-size:var(--text-sm)}
+    .mentorshpe-benefits{display:grid;gap:var(--space-4);margin-bottom:var(--space-10)}
+    .mentorshpe-benefit{
+      padding:var(--space-5);
+      background:var(--color-surface-2);
+      border:1px solid color-mix(in srgb,var(--color-border) 75%,transparent);
+      border-radius:var(--radius-lg);
+    }
+    .mentorshpe-icon{
+      width:2.75rem;
+      height:2.75rem;
+      display:grid;
+      place-items:center;
+      margin-bottom:var(--space-4);
+      border-radius:var(--radius-md);
+      background:var(--color-primary-highlight);
+      color:var(--color-primary);
+      border:1px solid color-mix(in srgb,var(--color-primary) 40%,var(--color-border));
+    }
+    .mentorshpe-icon svg{width:1.4rem;height:1.4rem;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+    .mentorshpe-benefit strong{
+      display:block;
+      font-family:var(--font-display);
+      font-size:var(--text-lg);
+      line-height:1;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      color:var(--color-primary);
+      margin-bottom:var(--space-2);
+    }
+    .mentorshpe-benefit span{display:block;color:var(--color-text-muted);font-size:var(--text-sm)}
+    .mentorshpe-role-grid{display:grid;gap:var(--space-4);margin-bottom:var(--space-10)}
+    .mentorshpe-role{
+      padding:var(--space-6);
+      border-radius:var(--radius-xl);
+      background:var(--color-surface-2);
+      border:1px solid color-mix(in srgb,var(--color-border) 75%,transparent);
+    }
+    .mentorshpe-role h3,.mentorshpe-subtitle{
+      font-family:var(--font-display);
+      font-size:var(--text-xl);
+      line-height:1;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+    }
+    .mentorshpe-role h3{margin-bottom:var(--space-4)}
+    .mentorshpe-role p{color:var(--color-text-muted);margin-bottom:var(--space-4)}
+    .mentorshpe-list{display:grid;gap:var(--space-3);list-style:none}
+    .mentorshpe-list li{position:relative;padding-left:1.5rem;color:var(--color-text-muted);font-size:var(--text-sm)}
+    .mentorshpe-list li::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:.55rem;
+      width:.55rem;
+      height:.55rem;
+      border-radius:50%;
+      background:var(--color-primary);
+    }
+    .mentorshpe-timeline{display:grid;gap:var(--space-4);margin-bottom:var(--space-10)}
+    .mentorshpe-step{
+      position:relative;
+      padding:var(--space-5);
+      padding-left:4.5rem;
+      background:color-mix(in srgb,var(--color-surface-2) 82%,transparent);
+      border:1px solid color-mix(in srgb,var(--color-border) 70%,transparent);
+      border-radius:var(--radius-lg);
+    }
+    .mentorshpe-step-number{
+      position:absolute;
+      left:var(--space-5);
+      top:var(--space-5);
+      display:grid;
+      place-items:center;
+      width:2.25rem;
+      height:2.25rem;
+      border-radius:50%;
+      background:var(--color-primary);
+      color:var(--color-text-inverse);
+      font-weight:800;
+    }
+    .mentorshpe-step strong{display:block;margin-bottom:var(--space-2);text-transform:uppercase;letter-spacing:.06em;font-size:var(--text-sm)}
+    .mentorshpe-step p{color:var(--color-text-muted);font-size:var(--text-sm)}
+    .mentorshpe-coordinators{display:grid;gap:var(--space-4);margin:var(--space-6) 0 var(--space-10)}
+    .mentorshpe-coordinator{
+      padding:var(--space-5);
+      border-radius:var(--radius-xl);
+      background:var(--color-surface-2);
+      border:1px solid color-mix(in srgb,var(--color-border) 75%,transparent);
+    }
+    .mentorshpe-coordinator-photo{
+      aspect-ratio:4/3;
+      display:grid;
+      place-items:center;
+      margin-bottom:var(--space-4);
+      border-radius:calc(var(--radius-xl) - .35rem);
+      background:linear-gradient(135deg,var(--color-surface-offset),var(--color-surface));
+      border:1px dashed color-mix(in srgb,var(--color-blue) 45%,var(--color-border));
+      color:var(--color-text-faint);
+      font-size:var(--text-xs);
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      text-align:center;
+      padding:var(--space-4);
+    }
+    .mentorshpe-coordinator h4{font-family:var(--font-display);font-size:var(--text-lg);text-transform:uppercase;letter-spacing:.03em}
+    .mentorshpe-coordinator p{color:var(--color-text-muted);font-size:var(--text-sm)}
+    .mentorshpe-stories{position:relative;margin:var(--space-6) 0 var(--space-10)}
+    .mentorshpe-story{display:none;padding:var(--space-6);border-radius:var(--radius-xl);background:var(--color-surface-2);border:1px solid color-mix(in srgb,var(--color-border) 75%,transparent)}
+    .mentorshpe-story.is-active{display:block}
+    .mentorshpe-story blockquote{font-size:var(--text-lg);line-height:1.5;margin-bottom:var(--space-4)}
+    .mentorshpe-story cite{font-style:normal;color:var(--color-primary);font-weight:800;font-size:var(--text-sm);text-transform:uppercase;letter-spacing:.06em}
+    .mentorshpe-story-nav{display:flex;align-items:center;justify-content:center;gap:var(--space-3);margin-top:var(--space-4)}
+    .mentorshpe-story-button{
+      width:44px;
+      height:44px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:var(--color-surface-2);
+      border:1px solid color-mix(in srgb,var(--color-border) 75%,transparent);
+    }
+    .mentorshpe-story-button:hover{background:var(--color-surface-offset)}
+    .mentorshpe-faq{display:grid;gap:var(--space-3);margin:var(--space-6) 0 var(--space-10)}
+    .mentorshpe-faq details{
+      padding:var(--space-5);
+      border-radius:var(--radius-lg);
+      background:var(--color-surface-2);
+      border:1px solid color-mix(in srgb,var(--color-border) 75%,transparent);
+    }
+    .mentorshpe-faq summary{
+      cursor:pointer;
+      list-style:none;
+      font-weight:800;
+      color:var(--color-text);
+      padding-right:2rem;
+      position:relative;
+    }
+    .mentorshpe-faq summary::-webkit-details-marker{display:none}
+    .mentorshpe-faq summary::after{content:"+";position:absolute;right:0;top:-.2rem;color:var(--color-primary);font-size:1.5rem}
+    .mentorshpe-faq details[open] summary::after{content:"–"}
+    .mentorshpe-faq details p{color:var(--color-text-muted);font-size:var(--text-sm);margin-top:var(--space-3)}
+    .mentorshpe-apply{
+      display:flex;
+      flex-direction:column;
+      align-items:flex-start;
+      gap:var(--space-5);
+      padding:var(--space-6);
+      border-radius:var(--radius-xl);
+      background:linear-gradient(135deg,var(--color-primary),#ff8755 55%,#ffc4a8);
+      color:#111;
+    }
+    .mentorshpe-apply h3{font-family:var(--font-display);font-size:var(--text-xl);line-height:1;text-transform:uppercase;letter-spacing:.03em;margin-bottom:var(--space-2)}
+    .mentorshpe-apply p{max-width:60ch;color:rgba(17,17,17,.78)}
+    .mentorshpe-apply .btn{background:#111;color:#fff;border:1px solid #111}
+    .mentorshpe-apply .btn:hover{background:var(--color-bg);transform:translateY(-2px)}
+    .reveal{opacity:0;transform:translateY(22px);transition:opacity 650ms ease,transform 650ms ease}
+    .reveal.is-visible{opacity:1;transform:none}
+
+
+    /* ---------------------------------------------------------------
+       SMALL STYLE VARIANTS
+       These classes replace the inline style="..." attributes that
+       were previously stored directly in index.html. Keeping them here
+       means all visual styling now lives in styles.css.
+       --------------------------------------------------------------- */
+    .subhead-wide{max-width:60ch}
+    .media-cover{object-fit:cover}
+    .officer-grid-spaced{margin-top:var(--space-4)}
+    .gallery-image{width:autofill;height:autofill}
+    .metric-grid-spaced{margin-top:var(--space-6)}
+    .kicker-on-light{background:rgba(255,255,255,.34);border-color:rgba(17,17,17,.08)}
+    .cta .btn-dark{background:#111;color:#fff;border-color:#111}
+    .cta .btn-outline-dark{background:transparent;border-color:rgba(17,17,17,.22);color:#111}
+    .footer-brand{margin-bottom:var(--space-3)}
+    .footer-links{align-self:end;text-align:right}
+
+
+
+    /* ---------------------------------------------------------------
+       RESPONSIVE RULES ("@media" blocks)
+       These change the layout depending on how wide the browser
+       window/device screen is. Think of them as "if the screen is at
+       least ___ pixels wide, use this layout instead."
+       You generally don't need to edit these unless you're adding a
+       whole new section and want it to also look good on mobile.
+       --------------------------------------------------------------- */
+    @media (min-width:700px){
+      .countdown{grid-template-columns:repeat(4,1fr)}
+      .countdown-unit:nth-child(2){border-right:1px solid var(--color-border)}
+      .countdown-unit:nth-child(-n+2){border-bottom:0}
+      .officer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .mentorshpe-benefits{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .mentorshpe-role-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .mentorshpe-timeline{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .mentorshpe-coordinators{grid-template-columns:repeat(2,minmax(0,1fr))} /* officer cards: 2 per row on tablets+ */
+    }
+    @media (min-width:900px){
+      .join-hero{grid-template-columns:1.05fr .95fr;align-items:center}
+      .convention-feature{grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr)}
+      .split{grid-template-columns:.95fr 1.05fr}
+      .metric-grid{grid-template-columns:repeat(3,minmax(0,1fr))} /* the 3 convention stat boxes side by side */
+      .updates-grid{grid-template-columns:1fr} /* calendar spans the full section width */
+      .footer-grid{grid-template-columns:1fr auto}
+      .officer-grid.exec{grid-template-columns:repeat(4,minmax(0,1fr))} /* Executive board: 4 per row on desktop */
+      .officer-grid.directors{grid-template-columns:repeat(5,minmax(0,1fr))} /* Directors/chairs: 5 per row on desktop */
+      .mentorshpe-hero{grid-template-columns:1.05fr .95fr}
+      .mentorshpe-benefits{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .mentorshpe-coordinators{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .mentorshpe-apply{flex-direction:row;align-items:center;justify-content:space-between}
+      .mentorshpe-apply .btn{flex-shrink:0}
+    }
+    @media (max-width:760px){
+      /* On small phone screens: hide the top nav links, stack things
+         into a single column, and shrink the slideshow image height. */
+      .nav-links{display:none}
+      .slideshow{grid-template-columns:1fr}
+      .slides{min-height:auto}
+      .slide,.slide.is-active{grid-template-columns:1fr}
+      .slide-image{min-height:18rem}
+      .slide-arrow{justify-self:center}
+    }
+    /* Turns off animations/transitions for visitors whose devices are
+       set to "reduce motion" (an accessibility setting). Leave as-is. */
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
